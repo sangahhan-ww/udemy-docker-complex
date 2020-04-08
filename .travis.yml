@@ -5,13 +5,14 @@ services:
 
 before_install:
   - docker build -t sangah93/udemy-docker-complex-client-test -f ./client/Dockerfile.dev ./client
-  - docker build -t sangah93/udemy-docker-complex-server-test -f ./server/Dockerfile.dev ./server
-  - docker build -t sangah93/udemy-docker-complex-worker-test -f ./worker/Dockerfile.dev ./worker
+  # - docker build -t sangah93/udemy-docker-complex-server-test -f ./server/Dockerfile.dev ./server
+  # - docker build -t sangah93/udemy-docker-complex-worker-test -f ./worker/Dockerfile.dev ./worker
 
 script: 
   - docker run -e CI=true sangah93/udemy-docker-complex-client-test npm test
-  - docker run -e CI=true sangah93/udemy-docker-complex-server-test npm test
-  - docker run -e CI=true sangah93/udemy-docker-complex-worker-test npm test
+  # right now, there are no tests for the other projects so let's leave that out
+  # - docker run -e CI=true sangah93/udemy-docker-complex-server-test npm test
+  # - docker run -e CI=true sangah93/udemy-docker-complex-worker-test npm test
 
 after_success:
   # then we push off everything to docker hub...
