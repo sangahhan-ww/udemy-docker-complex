@@ -13,13 +13,15 @@ script:
   - docker run sangah93/udemy-docker-complex-worker-test npm test -- --coverage
 
 after_success:
+  # then we push off everything to docker hub...
+  # 1. build & tag
   - docker build -t sangah93/udemy-docker-complex-client ./client # here we use the default dockerfile
   - docker build -t sangah93/udemy-docker-complex-nginx ./nginx
   - docker build -t sangah93/udemy-docker-complex-server ./server
   - docker build -t sangah93/udemy-docker-complex-worker ./worker
-  # then we push off everything to docker hub...
-  # 1. login to docker cli (from travis ci env variables)
+  # 2. login to docker cli (from travis ci env variables)
   - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_ID" --password-stdin
+  # 3. push the build images up
   - docker push sangah93/udemy-docker-complex-client
   - docker push sangah93/udemy-docker-complex-nginx
   - docker push sangah93/udemy-docker-complex-server
