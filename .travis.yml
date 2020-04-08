@@ -1,0 +1,26 @@
+sudo: required
+services:
+  - docker
+
+before_install:
+  - docker build -t sangah93/udemy-docker-complex-client-test -f ./client/Dockerfile.dev ./client
+  - docker build -t sangah93/udemy-docker-complex-server-test -f ./server/Dockerfile.dev ./server
+  - docker build -t sangah93/udemy-docker-complex-worker-test -f ./worker/Dockerfile.dev ./worker
+
+script: 
+  - docker run sangah93/udemy-docker-complex-client-test npm test -- --coverage
+  - docker run sangah93/udemy-docker-complex-server-test npm test -- --coverage
+  - docker run sangah93/udemy-docker-complex-worker-test npm test -- --coverage
+
+after_success:
+  - docker build -t sangah93/udemy-docker-complex-client ./client # here we use the default dockerfile
+  - docker build -t sangah93/udemy-docker-complex-nginx ./nginx
+  - docker build -t sangah93/udemy-docker-complex-server ./server
+  - docker build -t sangah93/udemy-docker-complex-worker ./worker
+  # then we push off everything to docker hub...
+  # 1. login to docker cli (from travis ci env variables)
+  - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_ID" --password-stdin
+  - docker push sangah93/udemy-docker-complex-client
+  - docker push sangah93/udemy-docker-complex-nginx
+  - docker push sangah93/udemy-docker-complex-server
+  - docker push sangah93/udemy-docker-complex-worker
