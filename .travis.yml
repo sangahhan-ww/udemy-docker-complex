@@ -22,7 +22,7 @@ after_success:
   - docker build -t "$DOCKER_ID"/udemy-docker-complex-server ./server
   - docker build -t "$DOCKER_ID"/udemy-docker-complex-worker ./worker
   # 2. login to docker cli (from travis ci env variables)
-  - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_ID" --password-stdin
+  - echo "${DOCKER_PASSWORD@Q}" | docker login -u "$DOCKER_ID" --password-stdin
   # 3. push the build images up
   - docker push "$DOCKER_ID"/udemy-docker-complex-client
   - docker push "$DOCKER_ID"/udemy-docker-complex-nginx
