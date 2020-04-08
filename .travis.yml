@@ -28,3 +28,16 @@ after_success:
   - docker push "$DOCKER_ID"/udemy-docker-complex-nginx
   - docker push "$DOCKER_ID"/udemy-docker-complex-server
   - docker push "$DOCKER_ID"/udemy-docker-complex-worker
+
+deploy:
+  edge: true
+  provider: elasticbeanstalk
+  region: us-east-1
+  app: udemy-docker-complex
+  env: UdemyDockerComplex-env
+  bucket_name: elasticbeanstalk-us-east-1-815672245469
+  bucket_path: udemy-docker-complex
+  on:
+    branch: master
+  access_key_id: $AWS_ACCESS_KEY
+  secret_access_key: $AWS_SECRET_KEY
