@@ -4,27 +4,27 @@ services:
   - docker
 
 before_install:
-  - docker build -t sangah93/udemy-docker-complex-client-test -f ./client/Dockerfile.dev ./client
-  # - docker build -t sangah93/udemy-docker-complex-server-test -f ./server/Dockerfile.dev ./server
-  # - docker build -t sangah93/udemy-docker-complex-worker-test -f ./worker/Dockerfile.dev ./worker
+  - docker build -t "$DOCKER_ID"/udemy-docker-complex-client-test -f ./client/Dockerfile.dev ./client
+  # - docker build -t "$DOCKER_ID"/udemy-docker-complex-server-test -f ./server/Dockerfile.dev ./server
+  # - docker build -t "$DOCKER_ID"/udemy-docker-complex-worker-test -f ./worker/Dockerfile.dev ./worker
 
 script: 
-  - docker run -e CI=true sangah93/udemy-docker-complex-client-test npm test
+  - docker run -e CI=true "$DOCKER_ID"/udemy-docker-complex-client-test npm test
   # right now, there are no tests for the other projects so let's leave that out
-  # - docker run -e CI=true sangah93/udemy-docker-complex-server-test npm test
-  # - docker run -e CI=true sangah93/udemy-docker-complex-worker-test npm test
+  # - docker run -e CI=true "$DOCKER_ID"/udemy-docker-complex-server-test npm test
+  # - docker run -e CI=true "$DOCKER_ID"/udemy-docker-complex-worker-test npm test
 
 after_success:
   # then we push off everything to docker hub...
   # 1. build & tag
-  - docker build -t sangah93/udemy-docker-complex-client ./client # here we use the default dockerfile
-  - docker build -t sangah93/udemy-docker-complex-nginx ./nginx
-  - docker build -t sangah93/udemy-docker-complex-server ./server
-  - docker build -t sangah93/udemy-docker-complex-worker ./worker
+  - docker build -t "$DOCKER_ID"/udemy-docker-complex-client ./client # here we use the default dockerfile
+  - docker build -t "$DOCKER_ID"/udemy-docker-complex-nginx ./nginx
+  - docker build -t "$DOCKER_ID"/udemy-docker-complex-server ./server
+  - docker build -t "$DOCKER_ID"/udemy-docker-complex-worker ./worker
   # 2. login to docker cli (from travis ci env variables)
   - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_ID" --password-stdin
   # 3. push the build images up
-  - docker push sangah93/udemy-docker-complex-client
-  - docker push sangah93/udemy-docker-complex-nginx
-  - docker push sangah93/udemy-docker-complex-server
-  - docker push sangah93/udemy-docker-complex-worker
+  - docker push "$DOCKER_ID"/udemy-docker-complex-client
+  - docker push "$DOCKER_ID"/udemy-docker-complex-nginx
+  - docker push "$DOCKER_ID"/udemy-docker-complex-server
+  - docker push "$DOCKER_ID"/udemy-docker-complex-worker
